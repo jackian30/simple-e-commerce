@@ -1,10 +1,70 @@
+
+<template>
+    <Head title="Reset Password" />
+
+    <Layout :isLoading="form.processing">
+        <v-card-title>
+            Reset Password
+        </v-card-title>
+        <v-card-text>
+
+            <v-form @submit.prevent="submit">
+                <CustomInput
+                    v-model="form.email"
+                    :errorMessages="generateErrors(v$.email)"
+                    label="E-mail"
+                    required
+                    type="email"
+                    @input="v$.email.$touch()"
+                    @blur="v$.email.$touch()"
+                ></CustomInput>
+
+                <CustomInput
+                    v-model="form.password"
+                    :errorMessages="generateErrors(v$.password)"
+                    label="Password"
+                    required
+                    type="password"
+                    outlined
+                    @input="v$.password.$touch()"
+                    @blur="v$.password.$touch()"
+                    class="mt-[20px]"
+                ></CustomInput>
+
+                <CustomInput
+                    v-model="form.password_confirmation"
+                    :errorMessages="generateErrors(v$.password_confirmation)"
+                    label="Confirm Password"
+                    required
+                    type="password"
+                    outlined
+                    @input="v$.password_confirmation.$touch()"
+                    @blur="v$.password_confirmation.$touch()"
+                    class="mt-[20px]"
+                ></CustomInput>
+            </v-form>
+        </v-card-text>
+        <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+                color="primary"
+                @click="submit"
+                variant="elevated"
+            >Reeset Password</v-btn>
+        </v-card-actions>
+    </Layout>
+</template>
 <script setup lang="ts">
-import GuestLayout from '@/Layouts/GuestLayout.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
+import { computed, reactive } from "vue";
+import { useVuelidate } from "@vuelidate/core";
+import { required, email, sameAs } from "@vuelidate/validators";
+
 import { Head, useForm } from '@inertiajs/vue3';
+
+import CustomInput from "@/Components/Input/CustomTextField.vue";
+import Layout from "@/Layouts/AuthLayout.vue";
+
+import { generateErrors } from "@/utils/errorGenerator";
 
 const props = defineProps<{
     email: string;
@@ -18,71 +78,40 @@ const form = useForm({
     password_confirmation: '',
 });
 
-const submit = () => {
+const $externalResults = reactive({});
+
+const rules = computed(() => ({
+    email: {
+        required,
+        email,
+    },
+    password: {
+        required,
+    },
+    password_confirmation: {
+        required,
+        sameAs: sameAs(form.password),
+    },
+}));
+
+const v$ = useVuelidate(rules, form, { $externalResults });
+
+const submit = async () => {
+    await v$.value.$touch();
+
+    if (v$.value.$invalid) {
+        return await false;
+    }
+
     form.post(route('password.store'), {
         onFinish: () => {
             form.reset('password', 'password_confirmation');
         },
+        onError: async (err) => {
+            await Object.keys(err).forEach((item) => {
+                $externalResults[item] = err[item];
+            });
+        }
     });
 };
 </script>
-
-<template>
-    <GuestLayout>
-        <Head title="Reset Password" />
-
-        <form @submit.prevent="submit">
-            <div>
-                <InputLabel for="email" value="Email" />
-
-                <TextInput
-                    id="email"
-                    type="email"
-                    class="mt-1 block w-full"
-                    v-model="form.email"
-                    required
-                    autofocus
-                    autocomplete="username"
-                />
-
-                <InputError class="mt-2" :message="form.errors.email" />
-            </div>
-
-            <div class="mt-4">
-                <InputLabel for="password" value="Password" />
-
-                <TextInput
-                    id="password"
-                    type="password"
-                    class="mt-1 block w-full"
-                    v-model="form.password"
-                    required
-                    autocomplete="new-password"
-                />
-
-                <InputError class="mt-2" :message="form.errors.password" />
-            </div>
-
-            <div class="mt-4">
-                <InputLabel for="password_confirmation" value="Confirm Password" />
-
-                <TextInput
-                    id="password_confirmation"
-                    type="password"
-                    class="mt-1 block w-full"
-                    v-model="form.password_confirmation"
-                    required
-                    autocomplete="new-password"
-                />
-
-                <InputError class="mt-2" :message="form.errors.password_confirmation" />
-            </div>
-
-            <div class="flex items-center justify-end mt-4">
-                <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Reset Password
-                </PrimaryButton>
-            </div>
-        </form>
-    </GuestLayout>
-</template>

@@ -17,7 +17,8 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', [ProductController::class, 'index']);
+Route::get('/', [ProductController::class, 'archive'])->name('product.archive');
+Route::get('/{product}', [ProductController::class, 'index'])->name('product.index');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');

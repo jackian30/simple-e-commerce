@@ -18,9 +18,11 @@
     </v-card-subtitle>
 
     <v-card-actions>
+      <Link :href="route('product.index', product.slug)">
       <v-btn>
         View Details
       </v-btn>
+      </Link>
       <v-spacer />
       <v-btn
         color="warning"
@@ -35,11 +37,11 @@
   </v-card>
 </template>
 <script setup lang="ts">
+import { Link } from '@inertiajs/vue3';
+
 import { useCart } from '@/stores/cart';
 
 const props = defineProps(['product']);
 
 const cart = useCart();
-
-
 </script>

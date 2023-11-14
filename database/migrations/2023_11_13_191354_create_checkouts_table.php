@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('checkouts', function (Blueprint $table) {
             $table->id();
 
-            $table->decimal('total_price', 9, 3);
+            $table->decimal('total_price', 9, 2);
             $table->foreignId('user_id')->nullable()->constrained()->cascadeOnDelete();
 
             $table->timestamps();

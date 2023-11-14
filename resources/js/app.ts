@@ -9,6 +9,7 @@ import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
 import vuetify from "@/plugins/vuetify";
+import pinia from "@/plugins/pinia";
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
@@ -18,6 +19,7 @@ createInertiaApp({
             .use(plugin)
             .use(ZiggyVue, Ziggy)
             .use(vuetify)
+            .use(pinia)
             .mount(el);
     },
     progress: {

@@ -11,9 +11,14 @@ class CheckoutProduct extends Model
 
     protected $fillable = [
         'checkout_id',
-        'user_id',
+        'product_id',
         'price',
         'original_price',
         'quantity',
     ];
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
 }

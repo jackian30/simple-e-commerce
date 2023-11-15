@@ -19,8 +19,8 @@ return new class extends Migration
             $table->decimal('original_price', 9, 2);
             $table->integer('quantity');
 
-            $table->foreignId('checkout_id')->nullable()->constrained()->cascadeOnDelete();
-            $table->foreignId('product_id')->nullable()->constrained()->cascadeOnDelete();
+            $table->foreignId('checkout_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('product_id')->constrained()->cascadeOnDelete();
 
             $table->timestamps();
         });

@@ -13,4 +13,10 @@ class Checkout extends Model
         'user_id',
         'total_price',
     ];
+
+
+    public function checkoutProduct()
+    {
+        return $this->hasMany(CheckoutProduct::class);
+    }
 }

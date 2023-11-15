@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\CheckoutSucessful;
 use App\Models\Cart;
 use Inertia\Inertia;
 use App\Models\Product;
@@ -45,6 +46,8 @@ class CheckoutController extends Controller
             ]
         );
 
+        event(new CheckoutSucessful($checkout));
+
         return true;
     }
 
@@ -80,6 +83,8 @@ class CheckoutController extends Controller
         }
 
         Cart::where('user_id', $user->id)->delete();
+
+        event(new CheckoutSucessful($checkout));
 
         return true;
     }

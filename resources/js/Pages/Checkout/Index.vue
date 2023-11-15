@@ -19,7 +19,7 @@
               <v-list v-if="cart.products.length > 0">
                 <v-list-item
                   v-for="(product, key) in cart.products"
-                  :key="product"
+                  :key="product.id"
                 >
                   <template #prepend>
                     <v-btn

@@ -121,7 +121,7 @@ const submit = async () => {
 
     form.post(route('login'), {
         onFinish: async () => {
-            await cart.saveToCart();
+            await cart.getExistingCart();
             form.reset('password');
         },
         onError: async (err) => {

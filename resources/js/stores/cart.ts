@@ -5,11 +5,11 @@ import { usePage } from '@inertiajs/vue3';
 export const useCart = defineStore("cart", {
   state: () => {
     return {
-      products: [],
+      products: <Array<Product>>[],
     };
   },
   actions: {
-    addToCart (product) {
+    addToCart (product: Product) {
       let isExist = this.products.findIndex(item => item.id === product.id);
 
       if (isExist !== -1) {
@@ -21,7 +21,7 @@ export const useCart = defineStore("cart", {
 
         productToPush.quantity = 1;
         productToPush.originalPrice = product.price;
-        productToPush.price = parseFloat(product.price)
+        productToPush.price = (product.price)
 
         this.products.push(productToPush);
       }
@@ -47,16 +47,37 @@ export const useCart = defineStore("cart", {
     saveToCart () {
       axios.post(route('cart.store'), { products: this.products }).then(res => {
         this.products = [];
-        res.data.forEach(product => {
-          this.products.push({
-            id: product.product.id,
-            name: product.product.name,
-            quantity: product.quantity,
-            price: product.product.price * product.quantity,
-            originalPrice: product.product.price,
-          });
+        res.data.forEach((product: Product) => {
+          if (product.product) {
+            this.products.push({
+              id: product.product.id,
+              name: product.product.name,
+              quantity: product.quantity,
+              price: product.product.price * product.quantity,
+              originalPrice: product.product.price,
+            });
+          }
         })
       });
+    },
+    getExistingCart () {
+      axios.get(route('cart.existing')).then(async res => {
+        let result = res.data;
+
+        await result.forEach(async (product: Product) => {
+          if (product.product) {
+            await this.products.push({
+              id: product.product.id,
+              name: product.product.name,
+              quantity: product.quantity,
+              price: product.product.price * product.quantity,
+              originalPrice: product.product.price,
+            });
+          }
+        });
+
+        this.saveToCart();
+      })
     }
   },
   persist: {

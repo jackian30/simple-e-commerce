@@ -18,6 +18,13 @@ class CartController extends Controller
         //
     }
 
+    public function getExistingCart()
+    {
+        $user = auth()->user();
+
+        return Cart::where('user_id', $user->id)->with('product')->get();
+    }
+
     public function store(StoreCartRequest $request)
     {
         $user = auth()->user();

@@ -65,6 +65,7 @@ function profile () {
 }
 
 function logout () {
+    cart.$reset();
     router.post(route("logout"));
 }
 </script>

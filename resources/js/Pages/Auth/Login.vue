@@ -78,6 +78,10 @@ import { required, email } from "@vuelidate/validators";
 
 import { Head, Link, useForm } from '@inertiajs/vue3';
 
+import { useCart } from '@/stores/cart';
+
+const cart = useCart();
+
 import CustomInput from "@/Components/Input/CustomTextField.vue";
 import Layout from "@/Layouts/AuthLayout.vue";
 
@@ -116,7 +120,8 @@ const submit = async () => {
     }
 
     form.post(route('login'), {
-        onFinish: () => {
+        onFinish: async () => {
+            await cart.saveToCart();
             form.reset('password');
         },
         onError: async (err) => {

@@ -2,65 +2,61 @@
 
 namespace App\Http\Controllers;
 
+use Inertia\Inertia;
+use App\Models\Checkout;
 use App\Http\Requests\StoreCheckoutRequest;
 use App\Http\Requests\UpdateCheckoutRequest;
-use App\Models\Checkout;
+use App\Models\Cart;
+use App\Models\CheckoutProduct;
 
 class CheckoutController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        return Inertia::render('Checkout/Index');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreCheckoutRequest $request)
     {
         //
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Checkout $checkout)
+    public function checkoutCart(StoreCheckoutRequest $request)
     {
-        //
-    }
+        $user = auth()->user();
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Checkout $checkout)
-    {
-        //
-    }
+        $cart = Cart::where('user_id', $user->id)->with('product')->get();
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateCheckoutRequest $request, Checkout $checkout)
-    {
-        //
-    }
+        $totalPrice = 0;
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Checkout $checkout)
-    {
-        //
+        foreach ($cart as $key => $product) {
+            $totalPrice += $product->quantity * $product->product->price;
+        }
+
+        $checkout = Checkout::create([
+            'user_id' => $user->id,
+            'total_price' => $totalPrice,
+        ]);
+
+        foreach ($cart as $key => $product) {
+            CheckoutProduct::updateOrCreate(
+                [
+                    'checkout_id'   => $checkout->id,
+                    'product_id' => $product->product->id
+                ],
+                [
+                    'price' => $product->quantity * $product->product->price,
+                    'original_price'  => $product->product->price,
+                    'quantity' =>  $product->quantity,
+                ]
+            );
+        }
+
+        return true;
     }
 }

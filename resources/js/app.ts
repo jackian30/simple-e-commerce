@@ -11,6 +11,9 @@ const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 import vuetify from "@/plugins/vuetify";
 import pinia from "@/plugins/pinia";
 
+import sweelalert from 'sweetalert2';
+window.Swal = sweelalert;
+
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
     resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob<DefineComponent>('./Pages/**/*.vue')),

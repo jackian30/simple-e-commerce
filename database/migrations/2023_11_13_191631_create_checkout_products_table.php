@@ -16,6 +16,7 @@ return new class extends Migration
 
             // I'm always adding this field for e-commerce for counter checking and in case that the product price gets updated
             $table->decimal('price', 9, 2);
+            $table->decimal('original_price', 9, 2);
             $table->integer('quantity');
 
             $table->foreignId('checkout_id')->nullable()->constrained()->cascadeOnDelete();

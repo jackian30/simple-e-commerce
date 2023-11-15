@@ -3,6 +3,7 @@
         <v-app-bar>
             <v-spacer></v-spacer>
 
+            <Link :href="route('checkout.index')">
             <v-btn stacked>
                 <v-badge
                     :content="cart.products.length"
@@ -11,6 +12,7 @@
                     <v-icon>mdi-cart</v-icon>
                 </v-badge>
             </v-btn>
+            </Link>
 
             <v-menu
                 anchor="bottom start"

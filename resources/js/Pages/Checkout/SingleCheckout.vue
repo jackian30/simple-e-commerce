@@ -16,32 +16,17 @@
               Your Orders:
             </v-card-title>
             <v-card-text>
-              <v-list v-if="cart.products.length > 0">
-                <v-list-item
-                  v-for="(product, key) in cart.products"
-                  :key="product"
-                >
-                  <template #prepend>
-                    <v-btn
-                      icon="mdi-close"
-                      @click="cart.removeProduct(key)"
-                      variant="plain"
-                    >
-                    </v-btn>
-                  </template>
+              <v-list>
+                <v-list-item>
                   <v-list-item-title>{{ product.name }}</v-list-item-title>
                   <v-list-item-subtitle>${{ product.price }}</v-list-item-subtitle>
 
                   <template #append>
-                    <Counter
-                      v-model="cart.products[key].quantity"
-                      @update:model-value="cart.changeQuantity(key)"
-                    />
+                    <Counter v-model.number="quantity" />
 
                   </template>
                 </v-list-item>
               </v-list>
-              <p v-else> Cart is Empty! Please Add to Cart!</p>
             </v-card-text>
           </v-card>
         </v-col>
@@ -90,32 +75,30 @@ import { Head, Link, router } from '@inertiajs/vue3';
 import Counter from "@/Components/Input/Counter.vue";
 import Layout from "@/Layouts/GuestLayout.vue";
 
-import { useCart } from '@/stores/cart';
-import { computed } from 'vue';
+import { ref, watch, computed } from 'vue';
 import axios from 'axios';
 
-const cart = useCart();
+const props = defineProps(['product']);
 
+const quantity = ref(1);
+
+watch(() => quantity.value, (newVal) => {
+  if (newVal <= 0) {
+    quantity.value = 1
+  }
+})
 const totalPrice = computed(() => {
-  let price = 0;
-
-  cart.products.forEach((item) => {
-    price += item.price;
-  });
-
-  return price;
+  return quantity.value * props.product.price;
 })
 
 function checkoutCart () {
-  axios.post(route('checkout.checkoutCart')).then((res) => {
+  axios.post(route('checkout.single', props.product.id), { quantity: quantity.value }).then((res) => {
     Swal.fire({
       title: 'Checkout successful!',
       icon: 'success',
     }).then(() =>
       router.visit(route('product.archive'))
     );
-
-    cart.$reset();
   })
 }
 </script>

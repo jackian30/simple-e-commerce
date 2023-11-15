@@ -24,9 +24,24 @@
       </v-btn>
       </Link>
       <v-spacer />
+      <Link
+        :href="route('checkout.single.show', product.id)"
+        class="mr-2"
+      >
+
+      <v-btn
+        color="primary"
+        variant="elevated"
+        append-icon="mdi-cart-check"
+        @click="cart.addToCart(product)"
+      >
+        Checkout
+      </v-btn>
+      </Link>
+
       <v-btn
         color="warning"
-        variant="text"
+        variant="elevated"
         append-icon="mdi-cart-plus"
         @click="cart.addToCart(product)"
       >

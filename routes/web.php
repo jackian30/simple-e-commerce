@@ -35,7 +35,9 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/addToCart', [CartController::class, 'store'])->name('cart.store');
 
-    Route::post('/checkoutCart', [CheckoutController::class, 'checkoutCart'])->name('checkout.checkoutCart');
+    Route::post('/checkout/cart', [CheckoutController::class, 'checkoutCart'])->name('checkout.checkoutCart');
+    Route::get('/checkout/single/{product}', [CheckoutController::class, 'single'])->name('checkout.single.show');
+    Route::post('/checkout/single/{product}', [CheckoutController::class, 'singleCheckout'])->name('checkout.single');
 });
 
 require __DIR__ . '/auth.php';

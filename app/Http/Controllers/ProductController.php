@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use Inertia\Inertia;
 use App\Models\Product;
 use Illuminate\Http\Request;
-use App\Http\Requests\StoreProductRequest;
-use App\Http\Requests\UpdateProductRequest;
 
 class ProductController extends Controller
 {
@@ -27,33 +25,5 @@ class ProductController extends Controller
         $product = Product::where('slug', $product)->with('productImage')->first();
 
         return Inertia::render('Product/Index', ['product' => $product]);
-    }
-
-    public function create()
-    {
-        //
-    }
-    public function store(StoreProductRequest $request)
-    {
-        //
-    }
-
-    public function show(Product $product)
-    {
-        //
-    }
-    public function edit(Product $product)
-    {
-        //
-    }
-
-    public function update(UpdateProductRequest $request, Product $product)
-    {
-        //
-    }
-
-    public function destroy(Product $product)
-    {
-        //
     }
 }

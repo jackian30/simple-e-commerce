@@ -8,8 +8,7 @@ use App\Models\Product;
 use App\Models\Checkout;
 use Illuminate\Http\Request;
 use App\Models\CheckoutProduct;
-use App\Http\Requests\StoreCheckoutRequest;
-use App\Http\Requests\UpdateCheckoutRequest;
+use App\Http\Requests\StoreSingleCheckoutRequest;
 
 class CheckoutController extends Controller
 {
@@ -23,7 +22,7 @@ class CheckoutController extends Controller
         return Inertia::render('Checkout/SingleCheckout', ['product' => $product]);
     }
 
-    public function singleCheckout(Product $product, Request $request)
+    public function singleCheckout(Product $product, StoreSingleCheckoutRequest $request)
     {
         $user = auth()->user();
 
@@ -47,16 +46,6 @@ class CheckoutController extends Controller
         );
 
         return true;
-    }
-
-    public function create()
-    {
-        //
-    }
-
-    public function store(StoreCheckoutRequest $request)
-    {
-        //
     }
 
     public function checkoutCart(Request $request)

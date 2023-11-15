@@ -4,9 +4,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,22 +22,23 @@ Route::get('/product/{product}', [ProductController::class, 'index'])->name('pro
 
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::group(['prefix' => '/profile'], function () {
+        Route::get('/', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::patch('/', [ProfileController::class, 'update'])->name('profile.update');
+        Route::delete('/', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    });
+
 
     Route::post('/addToCart', [CartController::class, 'store'])->name('cart.store');
 
     Route::get('/cart', [CartController::class, 'getExistingCart'])->name('cart.existing');
 
-    Route::post('/checkout/cart', [CheckoutController::class, 'checkoutCart'])->name('checkout.checkoutCart');
-    Route::get('/checkout/single/{product}', [CheckoutController::class, 'single'])->name('checkout.single.show');
-    Route::post('/checkout/single/{product}', [CheckoutController::class, 'singleCheckout'])->name('checkout.single');
+    Route::group(['prefix' => '/checkout'], function () {
+        Route::post('/cart', [CheckoutController::class, 'checkoutCart'])->name('checkout.checkoutCart');
+        Route::get('/single/{product}', [CheckoutController::class, 'single'])->name('checkout.single.show');
+        Route::post('/single/{product}', [CheckoutController::class, 'singleCheckout'])->name('checkout.single');
+    });
 });
 
 require __DIR__ . '/auth.php';

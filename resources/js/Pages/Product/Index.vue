@@ -34,6 +34,21 @@
               <p>{{ product.details }}</p>
             </v-card-text>
             <v-card-actions>
+              <v-spacer />
+              <Link
+                :href="route('checkout.single.show', product.id)"
+                class="mr-2"
+              >
+
+              <v-btn
+                color="primary"
+                variant="elevated"
+                append-icon="mdi-cart-check"
+              >
+                Checkout
+              </v-btn>
+              </Link>
+
               <v-btn
                 color="warning"
                 variant="text"

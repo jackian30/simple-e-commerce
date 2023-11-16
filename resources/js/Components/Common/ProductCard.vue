@@ -10,19 +10,27 @@
     </v-carousel>
 
     <v-card-title>
-      {{ product.name }}
+      <v-row no-gutters>
+        {{ product.name }}
+        <v-spacer />
+        <Link :href="route('product.index', product.slug)">
+        <v-btn>
+          View Details
+        </v-btn>
+        </Link>
+      </v-row>
+
     </v-card-title>
 
     <v-card-subtitle>
       ${{ product.price }}
     </v-card-subtitle>
+    <v-card-text>
+
+    </v-card-text>
 
     <v-card-actions>
-      <Link :href="route('product.index', product.slug)">
-      <v-btn>
-        View Details
-      </v-btn>
-      </Link>
+
       <v-spacer />
       <Link
         :href="route('checkout.single.show', product.id)"
@@ -33,7 +41,6 @@
         color="primary"
         variant="elevated"
         append-icon="mdi-cart-check"
-        @click="cart.addToCart(product)"
       >
         Checkout
       </v-btn>

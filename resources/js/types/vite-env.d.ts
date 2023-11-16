@@ -3,7 +3,7 @@
 interface Product {
   id: number,
   name: string,
-  price: number,
+  price: number | string,
   quantity: number,
   originalPrice: number,
   product?: ProductRelation

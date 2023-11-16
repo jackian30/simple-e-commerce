@@ -100,7 +100,7 @@ const totalPrice = computed(() => {
   let price = 0;
 
   cart.products.forEach((item) => {
-    price += item.price;
+    price += typeof item.price == 'string' ? parseFloat(item.price) : item.price;
   });
 
   return price;

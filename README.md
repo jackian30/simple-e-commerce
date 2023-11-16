@@ -44,3 +44,5 @@ docker run --rm \
 # <p align="center">Project Description</p>
   
 This project is using the Laravel Breeze Starter kit, Vuetify, Tailwind, Pinia as storage, and smtp as emailing service. I chose those tech stack to complete this exam faster with a presentable UI.
+
+About the Deployment, it's deployed using AWS Elastic Beanstalk, AWS EC2, and AWS CodePipeline for ci/cd. It's also using my own SMTP for emailing.
